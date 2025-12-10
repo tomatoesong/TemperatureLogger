@@ -8,7 +8,7 @@ TMP100::TMP100(uint8_t address, TwoWire* i2c) : _address(address), _i2c(i2c){
 
 TMP100::status TMP100::begin(){
   _i2c->begin();
-  _i2c->setClock(I2C_FAST_MODE_CLOCK);
+  _i2c->setClock(I2C_FAST_MODE_CLOCK);  //This should be outside of this class and the i2c should be already gone through begin()
 
   // Configure TMP100 to the default values with 12bit resolution
   _i2c->beginTransmission(_address);
