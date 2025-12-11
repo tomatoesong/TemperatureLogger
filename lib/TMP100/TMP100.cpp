@@ -6,23 +6,45 @@
 TMP100::TMP100(uint8_t address, TwoWire* i2c) : _address(address), _i2c(i2c){
 }
 
+/*
+  @return i2c config result status
+  @attention User needs to ensure that the I2C object has already called begin()
+  and the correct clock speed is set
+*/
 TMP100::status TMP100::begin(){
-  _i2c->begin();
-  _i2c->setClock(I2C_FAST_MODE_CLOCK);  //This should be outside of this class and the i2c should be already gone through begin()
-
+  // _i2c->begin();
+  // _i2c->setClock(I2C_FAST_MODE_CLOCK);  //This should be outside of this class and the i2c should be already gone through begin()
   // Configure TMP100 to the default values with 12bit resolution
+  if(_i2c == nullptr) return status::NULL_POINTER;
   _i2c->beginTransmission(_address);
   _i2c->write(TMP100_CONFIG_REGISTER);
   _i2c->write(TMP100_DEFAULT_CONFIG);
-  _i2c->endTransmission();
-
+  if(_i2c->endTransmission() != 0) return status::I2C_ERROR;
+  delay(320); //Wait the typical conversion time for 12bit resolution
   return status::OK;
 }
 
 /*
-  @RETURN status of the sensor reading
-  @PARAM: tempCelsius = reference to write temperature data in Celsius to
-  @NOTE: TMP100 is 12bit Q4 encoding with 0.0625C resolution
+  @return i2c config result status
+  @param *i2c for setting the TwoWire object
+  @attention User needs to ensure that the I2C object has already called begin()
+  and the correct clock speed is set
+*/
+TMP100::status TMP100::begin(TwoWire *i2c){
+  _i2c = i2c;
+  if(_i2c == nullptr) return status::NULL_POINTER;
+  _i2c->beginTransmission(_address);
+  _i2c->write(TMP100_CONFIG_REGISTER);
+  _i2c->write(TMP100_DEFAULT_CONFIG);
+  if(_i2c->endTransmission() != 0) return status::I2C_ERROR;
+  delay(320); //Wait the typical conversion time for 12bit resolution
+  return status::OK;
+}
+
+/*
+  @return status of the sensor reading
+  @param tempCelsius reference to write temperature data in Celsius to
+  @attention TMP100 is 12bit Q4 encoding with 0.0625C resolution
 */
 TMP100::status TMP100::readTempCelsius(float& tempCelsius){
   uint16_t rawTemp = 0;
@@ -34,9 +56,9 @@ TMP100::status TMP100::readTempCelsius(float& tempCelsius){
 }
 
 /*
-  @RETURN status of the sensor reading 
-  @PARAM: tempFahrenHeit = reference to write temperature data in Fahrenheit to
-  @NOTE: TMP100 is 12bit Q4 encoding with 0.0625 * 1.8 resolution
+  @return status of the sensor reading 
+  @param tempFahrenHeit reference to write temperature data in Fahrenheit to
+  @attention TMP100 is 12bit Q4 encoding with 0.0625 * 1.8 resolution
 */
 TMP100::status TMP100::readTempFahrenheit(float& tempFahrenHeit){
   uint16_t rawTemp = 0;
@@ -48,8 +70,8 @@ TMP100::status TMP100::readTempFahrenheit(float& tempFahrenHeit){
 }
 
 /*
-  @RETURN status of the sensor reading 
-  @PARAM: rawTemp = reference to write raw temperature data to
+  @return status of the sensor reading 
+  @param rawTemp reference to write raw temperature data to
 */
 TMP100::status TMP100::readRawTemp(uint16_t& rawTemp){
   uint8_t HighByte;
@@ -57,7 +79,7 @@ TMP100::status TMP100::readRawTemp(uint16_t& rawTemp){
 
   _i2c->beginTransmission(_address);
   _i2c->write(TMP100_TEMP_REGISTER);
-  _i2c->endTransmission();
+  _i2c->endTransmission(false);
 
   // //Test values
   // // -25.0C

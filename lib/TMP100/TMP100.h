@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Wire.h>
+#include <stdint.h>
 
+constexpr uint8_t TMP100_DEVICE_ADDRESS = 0x48;
 constexpr uint8_t TMP100_TEMP_REGISTER   = 0x00;
 constexpr uint8_t TMP100_CONFIG_REGISTER = 0x01;
 constexpr uint8_t TMP100_DEFAULT_CONFIG  = 0x60;
@@ -14,9 +16,11 @@ public:
   enum class status
   {
     OK,
-    I2C_ERROR
+    I2C_ERROR,
+    NULL_POINTER
   };
-  explicit TMP100(uint8_t address = 0x48, TwoWire *i2c = &Wire);
+  explicit TMP100(uint8_t address = TMP100_DEVICE_ADDRESS, TwoWire *i2c = &Wire);
+  status begin(TwoWire *i2c);
   status begin();
   status readTempCelsius(float &tempCelsius);
   status readTempFahrenheit(float &tempFahrenHeit);
