@@ -68,12 +68,12 @@ EEPROM24FC256::status EEPROM24FC256::readBytes(uint16_t maddress, uint8_t *outbu
   @attention This is a page write therefore numOfBytes should be max 64 Bytes and the write must happen 
   within one page
 */
-EEPROM24FC256::status EEPROM24FC256::writeBytes(uint16_t maddress, uint8_t *inbuff, size_t numOfBytes)
+EEPROM24FC256::status EEPROM24FC256::writeBytes(uint16_t maddress, const uint8_t *inbuff, size_t numOfBytes)
 {
     if (((static_cast<uint32_t>(maddress) + static_cast<uint32_t>(numOfBytes)) >= EEPROM_24FC256_MAX_BYTE) || numOfBytes == 0)
         return status::OUT_OF_BOUNDS;
     uint16_t CurrentPage = maddress / EEPROM_24FC256_PAGE_SIZE;
-    uint16_t EndOfDataPage = (maddress + numOfBytes) / EEPROM_24FC256_PAGE_SIZE;
+    uint16_t EndOfDataPage = (maddress + numOfBytes - 1) / EEPROM_24FC256_PAGE_SIZE;
     if (CurrentPage != EndOfDataPage)
         return status::OUT_OF_BOUNDS;
     uint8_t MS_Byte = maddress >> 8; 

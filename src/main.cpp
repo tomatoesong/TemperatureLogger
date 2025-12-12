@@ -4,7 +4,7 @@
 
     ====ASSUMPTIONS====
     ===================
-    - We are assumming this i2c library is portable across embedded platforms to give the 
+    - We are assumming this i2c library is portable across embedded platforms to give the
       drivers for TMP100 and 24FC256 portability
 */
 #include <Arduino.h>
@@ -15,37 +15,37 @@
 TwoWire i2c1;
 TMP100 tmp1;
 EEPROM24FC256 ee24fc256;
-DataPack dataPack;
-MetaData metaData;
+DataLogger logger(&tmp1, &ee24fc256);
+// DataPack dataPack;
+// MetaData metaData;
 
-void setup() {
-  // put your setup code here, to run once:
+void setup()
+{
   Serial.begin(115200);
+  while (!Serial)
+    ;
   i2c1.begin();
   i2c1.setClock(400000);
   tmp1.begin(&i2c1);
   ee24fc256.begin(&i2c1);
+  logger.begin();
+  // dataPack.temperature = 0xFF;
+  // dataPack.checksum = 0xFF;
+  // dataPack.timeStamp = 0xFFFF;
 
-  dataPack.temperature = 0xFF;
-  dataPack.checksum = 0xFF;
-  dataPack.timeStamp = 0xFFFF;
-
-  metaData.headAddress = 0xFF;
-  metaData.tailAddress = 0;
-  metaData.padding = 0xFFFFFFFF;
+  // metaData.headAddress = 0xFF;
+  // metaData.tailAddress = 0;
+  // metaData.padding = 0xFFFFFFFF;
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop()
+{
+  logger.step();
   // float tempC;
   // tmp1.readTempCelsius(tempC);
   // Serial.println(tempC, 4);
-  size_t dataSize = sizeof(dataPack);
-  size_t metaDataSize = sizeof(metaData);
-  Serial.print("dataSize: ");
-  Serial.print(dataSize);
-  Serial.print(", metaDataSize: ");
-  Serial.println(metaDataSize);
-  delay(3000);
+  // // size_t dataSize = sizeof(dataPack);
+  // // size_t metaDataSize = sizeof(metaData);
+  // delay(3000);
 }
 // static_assert(sizeof(Log) == 6, "Log struct must be 6 bytes!");

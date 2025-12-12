@@ -33,7 +33,7 @@ class EEPROM24FC256
     status begin();
     status begin(TwoWire *i2c);
     status readBytes(uint16_t maddress, uint8_t* outbuff, size_t length);
-    status writeBytes(uint16_t maddress, uint8_t* inbuff, size_t length);
+    status writeBytes(uint16_t maddress, const uint8_t* inbuff, size_t length);
 
     private:
     uint8_t _address;

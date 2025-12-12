@@ -24,10 +24,11 @@ public:
   status begin();
   status readTempCelsius(float &tempCelsius);
   status readTempFahrenheit(float &tempFahrenHeit);
+  status readRawTemp(int16_t &rawTemp);
+  float rawToCelsius(int16_t rawTemperature);
+  float rawToFahrenheit(int16_t rawTemperature);
 
 private:
   uint8_t _address;
   TwoWire *_i2c;
-
-  status readRawTemp(uint16_t &rawTemp);
 };
