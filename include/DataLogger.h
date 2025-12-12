@@ -20,7 +20,7 @@ struct __attribute__((packed)) MetaData
     uint16_t checksum = 0;
 };
 
-constexpr uint32_t LOG_PERIOD_MS = 10000; //10 minutes in miliseconds
+constexpr uint32_t LOG_PERIOD_MS = 600000; //10 minutes in miliseconds
 constexpr size_t DATA_PACK_SIZE = sizeof(DataPack);
 constexpr size_t META_DATA_SIZE = sizeof(MetaData);
 constexpr uint16_t META_DATA_ADDRESS = EEPROM_24FC256_MAX_BYTE - META_DATA_SIZE;
@@ -44,7 +44,7 @@ public:
     status getMetaData(MetaData &metadata);
     status putDataPack(DataPack datapack);
     status getDataPack(DataPack &datapack, uint16_t address);
-    // size_t getDataLength();
+    size_t getDataLength();
 
     status step();
 

@@ -108,10 +108,10 @@ DataLogger::status DataLogger::getDataPack(DataPack &datapack, uint16_t address)
 }
 
 /*
-  @return   status
-  @brief
-  @param
-  @attention
+  @return   status of step function
+  @brief    this function keeps tract of passed time and logs temperature data from TMP100 in raw int16_t in a struct to the EEPROM after every LOG_PERIOD_MS in the DataLogger.h.
+
+  @attention    This needs to be called as often as possible for the most accurate result
 */
 DataLogger::status DataLogger::step()
 {
@@ -134,11 +134,25 @@ DataLogger::status DataLogger::step()
     return DataLogger::status::OK;
 }
 
-// size_t DataLogger::getDataLength()
-// {
-//     return size_t();
-// }
+/*
+  @return   number of bytes of data currently written in EEPROM
+  @brief    it returns the number of bytes of DataPack in EEPROM
+  @attention    this is meant to be used to find how many total data you have saved in EEPROM. To get number of DataPack, simply divide returned value by DATA_PACK_SIZE.
+*/
+size_t DataLogger::getDataLength()
+{
+    MetaData metadata;
+    if (getMetaData(metadata) != DataLogger::status::OK)
+        return 0;
+    if (metadata.headAddress > metadata.tailAddress)
+        return (MAX_DATA_LENGTH - metadata.headAddress) + (metadata.tailAddress + DATA_PACK_SIZE);
+    return (size_t)(metadata.tailAddress - metadata.headAddress + DATA_PACK_SIZE);
+}
 
+/*
+  @return   status of function
+  @brief    Used in begin to initialize all necessary data to start logging and starts by noting one temperature data to EEPROM
+*/
 DataLogger::status DataLogger::init()
 {
     // populate metadata and write to eeprom
