@@ -122,8 +122,6 @@ DataLogger::status DataLogger::step()
         DataPack datapack;
         if (_tmp100->readRawTemp(datapack.temperature) != TMP100::status::OK)
             return DataLogger::status::TMP100_FAIL;
-        // TEST PRINT NEED TO TAKE OUT
-        Serial.println(_tmp100->rawToCelsius(datapack.temperature), 4);
         datapack.timeStamp = nowTime;
         datapack.checksum = CheckSumCalculation(datapack);
         if (putDataPack(datapack) != DataLogger::status::OK)
