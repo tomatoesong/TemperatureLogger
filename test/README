@@ -1,3 +1,21 @@
+## TESTING
+Due to the lack of physical devices to perform testing only rudimentary value injection to some functions were tested. Without having written an I2C simulation that works like a TwoWire Object with injected data
+it is hard to do any integration testing. With the time contraint and type of exercise this project is it was impractical to create a test suite.
+
+## TMP100
+* Tested with provided values from data sheet of MSB: 0xE7 and LSB: 0x00 which corresponds to -25.0000 C.
+* All functions returned the correct temperature and raw values 
+
+
+
+
+
+
+
+
+
+
+
 
 This directory is intended for PlatformIO Test Runner and project tests.
 
