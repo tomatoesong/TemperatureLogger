@@ -1,4 +1,4 @@
-**TemperatureLogger** is a simple embedded project that reads temperature data from a **TMP100** sensor and logs it to an **24FC256 EEPROM**. The repository includes the main firmware and supporting libraries.
+**TemperatureLogger** is a simple embedded project for the Arduino UNO that reads temperature data from a **TMP100** sensor and logs it to an **24FC256 EEPROM**. The repository includes the main firmware and supporting libraries.
 
 ---
 ## Features
@@ -12,10 +12,11 @@
 ## General
 ### Assumptions:
 * For the I2C communication to the peripherals I am assuming the platform has an implementation of an I2C library similar to the Wire library Arduino has. 
-* I utilized the millis() function implemented in the Arduino library to keep track of time. This is not a greatly accurate way to keep track of time as it is not based off of a RTC in most embedded platforms. This may not be a huge issue if the only thing that matters is the time delta of 10 minutes. This code base can easily adapt to an RTC timer by using it to implement the same function as millis().
 * The step() function in DataLogger class needs to be called as often as possible to keep the period between recording as close as possible to 10 minutes. This could be also implemented using a timer and an ISR however, it would not be as portable.
 * It is assumed that the user calls begin on the i2c object and set the correct clock speed (the lowest of all devices on the bus) before the TMP100 and 24FC256 calls their respective begin() function.
 * User calls the begin() function on I2C, TMP100, and 24F256 before DataLogger begin is called
+### Limitations
+* I utilized the millis() function implemented in the Arduino library to keep track of time. This is not a greatly accurate way to keep track of time as it is not based off of a RTC in most embedded platforms. This may not be a huge issue if the only thing that matters is the time delta of 10 minutes. This code base can easily adapt to an RTC timer by using it to implement the same function as millis().
 
 ---
 
@@ -27,6 +28,8 @@ This is the core of the data logging system that implements a circular memory ad
 * The user will use valid memory addresses in EEPROM for reading and writing data and meta data.
 * To retrieve data the user understands that they need to create memory space in bytes equal or larger than the size returned by the getDataLength() in DataLogger.
 * The returned status must be at the users discretion.
+### Limitations
+
 
 ---
 
@@ -37,9 +40,12 @@ Set of drivers that allows reading and writing to and from a buffer. All functio
 ### Assumptions
 * I am assuming that there is only one 24FC256 attached to the device. Even though it is possible to implement up to 8 devices on the same line using the address pins, due to the limited time I chose to assume one device.
 * The data will be retrieved more often than every 28.4 days as the data will overwrite the oldest data when it reaches the max capacity of the EEPROM.
-* We are assuming that all accesses are happening exactly aligned with the pages. For the data logging usage all data written are 8 bytes which perfectly fits into the EEPROM without spanning across multiple pages. A write across multiple pages could be implemented by calculating the page address of the write location and verify if the complete write would span across to another page and split the data into multiple sets to be written in pages.
+* All accesses are happening exactly aligned with the pages. For the data logging usage all data written are 8 bytes which perfectly fits into the EEPROM without spanning across multiple pages. A write across multiple pages could be implemented by calculating the page address of the write location and verify if the complete write would span across to another page and split the data into multiple sets to be written in pages.
 * We assume the user is aware of their i2c buffer limitation for their platform and writes and reads only within that limit.
 * The user always provides enough memory space for readBytes and the correct size matching or less than the buffer size for writeBytes.
+### Limitations
+* The writeBytes function writes in pages which are put in a buffer in the 24FC256 and written to memory later. This may take up to 5 ms which limits how often you can write to the EEPROM.
+* The data will be retrieved more often than every 28.4 days as the data will overwrite the oldest data when it reaches the max capacity of the EEPROM
 
 ---
 ## TMP100
