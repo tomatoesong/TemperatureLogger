@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Song
+    December 20205
+
+    Driver written for TMP100
+*/
 #pragma once
 
 #include <Wire.h>

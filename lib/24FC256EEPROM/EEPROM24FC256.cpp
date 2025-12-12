@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Song
+    December 20205
+
+    Driver written for 24FC256 EEPROM 
+*/
 #include "EEPROM24FC256.h"
 
 EEPROM24FC256::EEPROM24FC256(uint8_t address, TwoWire *i2c) : _address(address), _i2c(i2c)

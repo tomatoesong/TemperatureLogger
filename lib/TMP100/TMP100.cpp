@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Song
+    December 20205
+
+    Driver written for TMP100
+*/
 #include "TMP100.h"
 
 #include <Arduino.h>

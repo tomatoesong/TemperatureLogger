@@ -16,8 +16,6 @@ TwoWire i2c1;
 TMP100 tmp1;
 EEPROM24FC256 ee24fc256;
 DataLogger logger(&tmp1, &ee24fc256);
-// DataPack dataPack;
-// MetaData metaData;
 
 void setup()
 {

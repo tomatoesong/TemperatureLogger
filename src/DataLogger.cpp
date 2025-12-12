@@ -1,11 +1,11 @@
+/*
+    Author: Thomas Song
+    December 20205
+
+    Data logger implmentation for the Aruino Uno. Logs data given a specific period in the DataLogger.h as LOG_PERIOD_MS
+*/
 #include "DataLogger.h"
 
-/*
-  @return
-  @brief
-  @param
-  @attention
-*/
 DataLogger::DataLogger(TMP100 *tmp100, EEPROM24FC256 *eeprom24fc256) : _tmp100(tmp100), _eeprom24fc256(eeprom24fc256)
 {
 }

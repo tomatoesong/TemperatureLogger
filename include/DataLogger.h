@@ -1,4 +1,9 @@
+/*
+    Author: Thomas Song
+    December 20205
 
+    Data logger implmentation for the Aruino Uno. Logs data given a specific period in the DataLogger.h as LOG_PERIOD_MS
+*/
 #pragma once
 #include <Arduino.h>
 #include <stdint.h>
@@ -23,9 +28,9 @@ struct __attribute__((packed)) MetaData
 constexpr uint32_t LOG_PERIOD_MS = 600000; //10 minutes in miliseconds
 constexpr size_t DATA_PACK_SIZE = sizeof(DataPack);
 constexpr size_t META_DATA_SIZE = sizeof(MetaData);
-constexpr uint16_t META_DATA_ADDRESS = EEPROM_24FC256_MAX_BYTE - META_DATA_SIZE;
+constexpr uint16_t META_DATA_ADDRESS = EEPROM_24FC256_MAX_BYTE - META_DATA_SIZE;    //  Meta data location at the end of the EEPROM
 constexpr uint16_t DATA_START_ADRESS = 0x00;
-constexpr size_t MAX_DATA_LENGTH = EEPROM_24FC256_MAX_BYTE - META_DATA_SIZE;
+constexpr size_t MAX_DATA_LENGTH = EEPROM_24FC256_MAX_BYTE - META_DATA_SIZE;    //  Max number of bytes available after taking meta data into account
 
 class DataLogger
 {
@@ -48,6 +53,8 @@ public:
 
     status step();
 
+    // Check sum calculator that works for both data structs in this class
+    // Sums all bytes excluding the checksum value 
     template <typename T>
     uint16_t CheckSumCalculation(T &data)
     {
