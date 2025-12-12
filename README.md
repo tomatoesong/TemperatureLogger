@@ -8,6 +8,8 @@
 - Includes custom libraries for TMP100 and EEPROM
 
 ---
+![Temperature Logger](img/ProjectFlow.png)
+---
 
 ## General
 ### Assumptions:
