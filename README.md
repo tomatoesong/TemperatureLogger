@@ -29,7 +29,7 @@ This is the core of the data logging system that implements a circular memory ad
 * To retrieve data the user understands that they need to create memory space in bytes equal or larger than the size returned by the getDataLength() in DataLogger.
 * The returned status must be at the users discretion.
 ### Limitations
-
+* The check sum performed to verify data integrity is not as robust as implementing a CRC
 
 ---
 
