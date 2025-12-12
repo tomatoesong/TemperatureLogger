@@ -50,6 +50,7 @@ public:
     status putDataPack(DataPack datapack);
     status getDataPack(DataPack &datapack, uint16_t address);
     size_t getDataLength();
+    void checksumTest();
 
     status step();
 

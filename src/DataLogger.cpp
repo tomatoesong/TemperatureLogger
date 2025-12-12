@@ -62,6 +62,8 @@ DataLogger::status DataLogger::getMetaData(MetaData &metadata)
   @return   status of data write to EEPROM
   @brief    Writes datapack to EEPROM in the next available data location. This is implmented with a circular buffer. When number of data exceeds EEPROM capacity
             it will wrap around and overwrite oldest data.
+            This circular memory is acheived by tracking 2 heads and 2 tails. The head and tail address in EEPROM is the positions of the written data locations. 
+            The head and tail address in ram on the arduino _tailAdress and _headAddress keeps track of the location to write to next.
   @param    datapack DataPack struct to write into EEPROM
   @attention    User must ensure that checksum is already calculated before calling putDataPack()
 */
@@ -149,7 +151,7 @@ size_t DataLogger::getDataLength()
 
 /*
   @return   status of function
-  @brief    Used in begin to initialize all necessary data to start logging and starts by noting one temperature data to EEPROM
+  @brief    Used in begin to initialize all necessary data to start logging and starts by noting one temperature data to EEPROM.
 */
 DataLogger::status DataLogger::init()
 {
@@ -171,4 +173,15 @@ DataLogger::status DataLogger::init()
     datapack.checksum = CheckSumCalculation(datapack);
     putDataPack(datapack);
     return DataLogger::status::OK;
+}
+
+void DataLogger::checksumTest(){
+    MetaData metadata;
+    metadata.headAddress = 1;
+    metadata.tailAddress = 2;
+    metadata.padding = 3;
+    metadata.checksum = 33;
+
+    Serial.print("Expected output: 6, Real output: ");
+    Serial.println(CheckSumCalculation(metadata));
 }
