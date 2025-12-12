@@ -55,5 +55,17 @@ Simple drivers that can return temperature data from TMP100 in one of three data
 ### Assumption
 * It is assumed we want maximum accuracy from the sensor with 12 bit precision and do not poll the sensor more often then every 320ms
 
+## TESTING
+Due to the lack of physical devices to perform testing only rudimentary value injection to some functions were tested. Without having written an I2C simulation that works like a TwoWire Object with injected data
+it is hard to do any integration testing. With the time contraint and type of exercise this project is it was impractical to create a test suite. If I had access to more resources and time I would prefer to write an automated test setup with GoogleTests. This would require a fake a fake EEPROM that responds with specified values.
+
+#### TMP100
+* Tested with provided values from data sheet of MSB: 0xE7 and LSB: 0x00 which corresponds to -25.0000 C.
+* All functions returned the correct temperature and raw values 
+
+#### 24FC256
+* Check sum calculation verified using injected values and a simple test. Found in checksumTest()
+
+
 
 
